@@ -3,6 +3,14 @@
 diagnose_k3s() {
 	print_header "K3s Cluster Diagnostics"
 
+
+	# Check if kubectl is available first
+	if ! command -v kubectl &> /dev/null/; then
+		log_warn "kubectl command not found on this node. Skipping cluster API checks."
+		return 0
+	fi
+
+
 	# Check systemd service status
 	if systemctl is-active --quiet "$K3S_SERVICE_NAME"; then
 		log_success "Systemd service '$K3S_SERVICE_NAME" is active."

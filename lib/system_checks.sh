@@ -20,7 +20,7 @@ check_disk_space(){
 	local disk_usage=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
 	
 	if [ "$disk_usage" -ge "$DISK_WARNING_THRESHOLD" ]; then
-		log_warn "Root disk is at ${disk_usage}% (Threshold: ${DISK_WARNING_THRESHOLD}%)
+		log_warn "Root disk is at ${disk_usage}% (Threshold: ${DISK_WARNING_THRESHOLD}%)"
 	else 
 		log_success "Root disk usage is healthy at ${disk_usage}%"
 	fi

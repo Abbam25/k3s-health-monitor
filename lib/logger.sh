@@ -16,11 +16,11 @@ log_success() {
 }
 
 log_warn() {
-	echo -e  "${YELLOW}[WARN]{NC} $1"
+	echo -e  "${YELLOW}[WARN]${NC} $1"
 }
 
 log_error() { 
-	echo -e "${RED}[ERROR]{NC} $1"
+	echo -e "${RED}[ERROR]${NC} $1"
 }
 
 print_header() {
