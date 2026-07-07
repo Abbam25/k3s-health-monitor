@@ -15,7 +15,7 @@ source "${SCRIPT_DIR}/lib/logger.sh"
 source "${SCRIPT_DIR}/lib/system_checks.sh"
 source "${SCRIPT_DIR}/lib/k3s_diagnostics.sh"
 
-echo -e "${GREEN}Staring Node Health Check...${NC}"
+echo -e "${GREEN}Starting Node Health Check...${NC}"
 
 # Execute checks 
 check_disk_space 
