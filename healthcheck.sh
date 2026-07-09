@@ -31,9 +31,9 @@ check_flux_kustomizations
 check_flux_helmreleases
 check_flux_sources
 
-# section "Ingress"
-# check_ingress_service
-# check_external_urls
+section "Ingress"
+check_ingress_service
+check_external_urls
 
 # section "Storage"
 # check_qbittorrent_downloads
