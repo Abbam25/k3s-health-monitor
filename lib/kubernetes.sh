@@ -5,10 +5,10 @@ k() {
 }
 
 check_kubectl() {
-  if kubectl version --client >/dev/null 2>&1 && kubectl cluster-info >/dev/null 2>&1; then
-    pass "Kubernetes API reachable"
+  if k version --client >/dev/null 2>&1 && k cluster-info >/dev/null 2>&1; then
+    pass "Kubernetes API reachable through $K3S_CONTROL_HOST"
   else
-    fail "Kubernetes API not reachable. Check kubeconfig or k3s service."
+    fail "Kubernetes API not reachable $K3_CONTROL_HOST. Check kubeconfig or k3s service."
   fi
 }
 
@@ -16,8 +16,8 @@ check_nodes() {
   local total
   local ready
 
-  total="$(kubectl get nodes --no-headers 2>/dev/null | wc -l | tr -d ' ')"
-  ready="$(kubectl get nodes --no-headers 2>/dev/null | awk '$2 == "Ready" {count++} END {print count+0}')"
+  total="$(k get nodes --no-headers 2>/dev/null | wc -l | tr -d ' ')"
+  ready="$(k get nodes --no-headers 2>/dev/null | awk '$2 == "Ready" {count++} END {print count+0}')"
 
   if [ "$total" -eq 0 ]; then
     fail "No Kubernetes nodes found"
@@ -29,14 +29,14 @@ check_nodes() {
   elif [ "$ready" -eq "$total" ]; then
     warn "All discovered nodes are Ready, but expected $EXPECTED_NODE_COUNT and found $total"
   else
-    fail "Nodes Ready: $ready/$total. Run: kubectl get nodes -o wide"
+    fail "Nodes Ready: $ready/$total. Run: k get nodes -o wide"
   fi
 }
 
 check_node_pressure() {
   local pressure
 
-  pressure="$(kubectl get nodes -o jsonpath='{range .items[*]}{.metadata.name}{" "}{range .status.conditions[*]}{.type}{"="}{.status}{" "}{end}{"\n"}{end}' 2>/dev/null \
+  pressure="$(k get nodes -o jsonpath='{range .items[*]}{.metadata.name}{" "}{range .status.conditions[*]}{.type}{"="}{.status}{" "}{end}{"\n"}{end}' 2>/dev/null \
     | grep -E 'MemoryPressure=True|DiskPressure=True|PIDPressure=True|NetworkUnavailable=True' || true)"
 
   if [ -z "$pressure" ]; then
@@ -50,7 +50,7 @@ check_node_pressure() {
 check_unhealthy_pods() {
   local bad_pods
 
-  bad_pods="$(kubectl get pods -A --no-headers 2>/dev/null \
+  bad_pods="$(k get pods -A --no-headers 2>/dev/null \
     | awk '$4 ~ /CrashLoopBackOff|Error|ImagePullBackOff|ErrImagePull|CreateContainerConfigError|CreateContainerError|Pending|Unknown|Failed/ {print}')"
 
   if [ -z "$bad_pods" ]; then
@@ -64,7 +64,7 @@ check_unhealthy_pods() {
 check_pod_restarts() {
   local restarted
 
-  restarted="$(kubectl get pods -A --no-headers 2>/dev/null \
+  restarted="$(k get pods -A --no-headers 2>/dev/null \
     | awk '$5+0 > 3 {print}')"
 
   if [ -z "$restarted" ]; then
@@ -78,7 +78,7 @@ check_pod_restarts() {
 check_pvcs() {
   local bad_pvcs
 
-  bad_pvcs="$(kubectl get pvc -A --no-headers 2>/dev/null \
+  bad_pvcs="$(k get pvc -A --no-headers 2>/dev/null \
     | awk '$3 != "Bound" {print}')"
 
   if [ -z "$bad_pvcs" ]; then
@@ -92,7 +92,7 @@ check_pvcs() {
 check_deployments() {
   local bad_deployments
 
-  bad_deployments="$(kubectl get deployments -A --no-headers 2>/dev/null \
+  bad_deployments="$(k get deployments -A --no-headers 2>/dev/null \
     | awk '
       {
         split($3, ready, "/")
