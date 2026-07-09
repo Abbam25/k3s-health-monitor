@@ -39,12 +39,12 @@ section "Storage"
 check_qbittorrent_downloads
 check_jellyfin_media
 
-# section "Applications"
-# check_homepage
-# check_grafana
-# check_jellyfin
-# check_qbittorrent
-# check_gluetun
+section "Applications"
+check_homepage
+check_grafana
+check_jellyfin
+check_qbittorrent
+check_gluetun
 
 # section "VPN"
 # check_qbittorrent_vpn_ip
