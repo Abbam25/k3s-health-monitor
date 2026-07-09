@@ -20,6 +20,9 @@ NAS_SERVER="192.168.50.227"
 NAS_DOWNLOADS_PATH="/downloads"
 NAS_MEDIA_PATH="/media"
 
+QBITTORRENT_DOWNLOADS_PVC="qbittorrent-downloads"
+JELLYFIN_MEDIA_PVC="jellyfin-media"
+
 # Apps
 HOMEPAGE_NAMESPACE="homepage"
 HOMEPAGE_DEPLOYMENT="homepage"

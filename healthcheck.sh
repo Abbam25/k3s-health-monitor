@@ -35,9 +35,9 @@ section "Ingress"
 check_ingress_service
 check_external_urls
 
-# section "Storage"
-# check_qbittorrent_downloads
-# check_jellyfin_media
+section "Storage"
+check_qbittorrent_downloads
+check_jellyfin_media
 
 # section "Applications"
 # check_homepage
