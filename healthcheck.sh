@@ -26,9 +26,10 @@ check_pod_restarts
 check_pvcs
 check_deployments
 
-# section "Flux"
-# check_flux_kustomizations
-# check_flux_helmreleases
+section "Flux"
+check_flux_kustomizations
+check_flux_helmreleases
+check_flux_sources
 
 # section "Ingress"
 # check_ingress_service
