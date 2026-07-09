@@ -22,28 +22,30 @@ check_kubectl
 check_nodes
 check_node_pressure
 check_unhealthy_pods
+check_pod_restarts
 check_pvcs
+check_deployments
 
-section "Flux"
-check_flux_kustomizations
-check_flux_helmreleases
+# section "Flux"
+# check_flux_kustomizations
+# check_flux_helmreleases
 
-section "Ingress"
-check_ingress_service
-check_external_urls
+# section "Ingress"
+# check_ingress_service
+# check_external_urls
 
-section "Storage"
-check_qbittorrent_downloads
-check_jellyfin_media
+# section "Storage"
+# check_qbittorrent_downloads
+# check_jellyfin_media
 
-section "Applications"
-check_homepage
-check_grafana
-check_jellyfin
-check_qbittorrent
-check_gluetun
+# section "Applications"
+# check_homepage
+# check_grafana
+# check_jellyfin
+# check_qbittorrent
+# check_gluetun
 
-section "VPN"
-check_qbittorrent_vpn_ip
+# section "VPN"
+# check_qbittorrent_vpn_ip
 
 summary

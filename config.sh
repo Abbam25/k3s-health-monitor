@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# Where kubectl commands should run from
+K3S_CONTROL_HOST="andrew@192.168.50.147"
+
+# Run kubectl remotely through the control node
+KUBECTL_CMD=(ssh "$K3S_CONTROL_HOST" sudo k3s kubectl)
+FLUX_CMD=(ssh "$K3S_CONTROL_HOST" sudo KUBECONFIG=/etc/rancher/k3s/k3s.yaml flux)
 
 # Cluster identity
 CLUSTER_NAME="homelab-k3s"

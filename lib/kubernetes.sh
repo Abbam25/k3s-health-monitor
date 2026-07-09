@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+k() {
+  "${KUBECTL_CMD[@]}" "$@"
+}
+
 check_kubectl() {
   if kubectl version --client >/dev/null 2>&1 && kubectl cluster-info >/dev/null 2>&1; then
     pass "Kubernetes API reachable"
