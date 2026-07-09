@@ -41,6 +41,7 @@ check_jellyfin() {
   check_deployment_ready "Jellyfin" "$JELLYFIN_NAMESPACE" "$JELLYFIN_DEPLOYMENT"
 }
 
+
 check_qbittorrent() {
   check_deployment_ready "qBittorrent" "$QBITTORRENT_NAMESPACE" "$QBITTORRENT_DEPLOYMENT" || return
 
@@ -52,15 +53,23 @@ check_qbittorrent() {
     return
   fi
 
-  local container_statuses
-  container_statuses="$(k get pod "$pod" -n "$QBITTORRENT_NAMESPACE" \
-    -o jsonpath='{range .status.containerStatuses[*]}{.name}{"="}{.ready}{" "}{end}' 2>/dev/null)"
+  local container_table
+  container_table="$(k get pod "$pod" -n "$QBITTORRENT_NAMESPACE" \
+    -o custom-columns=NAME:.status.containerStatuses[*].name,READY:.status.containerStatuses[*].ready \
+    --no-headers 2>/dev/null)"
 
-  if echo "$container_statuses" | grep -q "$QBITTORRENT_CONTAINER=true" && \
-     echo "$container_statuses" | grep -q "$GLUETUN_CONTAINER=true"; then
-    pass "qBittorrent containers Ready: $container_statuses"
+  if [ -z "$container_table" ]; then
+    fail "Could not read qBittorrent container statuses from pod $pod"
+    echo "       Run: kubectl get pod -n $QBITTORRENT_NAMESPACE $pod -o wide"
+    return
+  fi
+
+  if echo "$container_table" | grep -q "$QBITTORRENT_CONTAINER" && \
+     echo "$container_table" | grep -q "$GLUETUN_CONTAINER" && \
+     echo "$container_table" | grep -q "true,true"; then
+    pass "qBittorrent containers Ready: $container_table"
   else
-    fail "qBittorrent containers not Ready: $container_statuses"
+    fail "qBittorrent containers not Ready: $container_table"
     echo "       Run: kubectl describe pod -n $QBITTORRENT_NAMESPACE $pod"
   fi
 
