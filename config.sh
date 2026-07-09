@@ -44,3 +44,4 @@ QBITTORRENT_URL="https://qbittorrent.dev-andrew.com"
 
 # Health thresholds
 GLUETUN_LOG_LOOKBACK="10m"
+PUBLIC_IP_CHECK_URL="https://api.ipify.org"

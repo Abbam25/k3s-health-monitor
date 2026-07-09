@@ -46,7 +46,7 @@ check_jellyfin
 check_qbittorrent
 check_gluetun
 
-# section "VPN"
-# check_qbittorrent_vpn_ip
+section "VPN"
+check_qbittorrent_vpn_ip
 
 summary

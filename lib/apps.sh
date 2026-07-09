@@ -106,3 +106,32 @@ check_gluetun() {
     echo "       Suggested: check Proton endpoint, DNS_ADDRESS, DOT, and WIREGUARD_MTU."
   fi
 }
+
+check_qbittorrent_vpn_ip() {
+  local qbit_ip
+  local control_ip
+
+  qbit_ip="$(k exec -n "$QBITTORRENT_NAMESPACE" "deploy/$QBITTORRENT_DEPLOYMENT" \
+    -c "$QBITTORRENT_CONTAINER" -- wget -qO- --timeout=15 "$PUBLIC_IP_CHECK_URL" 2>/dev/null || true)"
+
+  if [ -z "$qbit_ip" ]; then
+    fail "Could not get qBittorrent public IP from inside pod"
+    echo "       qBittorrent may not have internet access, DNS may be failing, or Gluetun may be blocking traffic."
+    return
+  fi
+
+  control_ip="$(ssh "$K3S_CONTROL_HOST" "curl -s --max-time 15 $PUBLIC_IP_CHECK_URL" 2>/dev/null || true)"
+
+  if [ -z "$control_ip" ]; then
+    warn "Could not get control-node public IP for VPN comparison"
+    echo "       qBittorrent public IP from pod: $qbit_ip"
+    return
+  fi
+
+  if [ "$qbit_ip" = "$control_ip" ]; then
+    fail "qBittorrent public IP matches control-node/home IP: $qbit_ip"
+    echo "       This suggests qBittorrent may NOT be going through the VPN."
+  else
+    pass "qBittorrent VPN IP check passed: qBittorrent=$qbit_ip control-node=$control_ip"
+  fi
+}
