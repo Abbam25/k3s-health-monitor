@@ -12,6 +12,7 @@ source "$BASE_DIR/lib/ingress.sh"
 source "$BASE_DIR/lib/storage.sh"
 source "$BASE_DIR/lib/apps.sh"
 
+banner
 echo "K3S HEALTH CHECK REPORT"
 echo "Cluster: $CLUSTER_NAME"
 echo "Time: $(date)"
